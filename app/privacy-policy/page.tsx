@@ -101,9 +101,11 @@ export default function PrivacyPolicyPage() {
             referring page, requested URL, and date and time of the request.
           </li>
           <li>
-            <strong>Usage information:</strong> if analytics is enabled in the
-            future, aggregated information about pages visited, referring
-            sources, approximate region, and interactions may be collected.
+            <strong>Usage information:</strong> CMtoIN uses Vercel Web Analytics
+            to collect aggregated information about pages visited, referring
+            sources, approximate country, device category, operating system,
+            browser, and the time of the visit. The calculator values you type
+            are not sent to analytics.
           </li>
           <li>
             <strong>Communications:</strong> if you email us, we receive the
@@ -128,30 +130,52 @@ export default function PrivacyPolicyPage() {
         <p>
           A cookie is a small text file placed on your device by a website or a
           third-party service. The current configuration of CMtoIN does not
-          intentionally set advertising or analytics cookies. Essential
-          technical storage may still be used by the hosting platform or a
-          security service to deliver the site reliably.
+          intentionally set advertising cookies. Vercel Web Analytics is
+          designed to operate without analytics cookies. Essential technical
+          storage may still be used by the hosting platform or a security
+          service to deliver the site reliably.
         </p>
         <p>
-          If analytics or advertising is added, those services may set cookies
-          or use similar technologies. Visitors in regions that require consent
-          should be shown an appropriate consent mechanism before non-essential
-          cookies are set. This template must be updated to describe that
-          mechanism and the categories of cookies in use.
+          If advertising or additional analytics services are added, those
+          services may set cookies or use similar technologies. Visitors in
+          regions that require consent should be shown an appropriate consent
+          mechanism before non-essential cookies are set. This template must be
+          updated to describe that mechanism and the categories of cookies in
+          use.
         </p>
 
         <h2 id="analytics">5. Analytics</h2>
         <p>
-          CMtoIN may use website analytics to understand which pages are useful
-          and to identify technical problems. If analytics is enabled, the
-          provider may collect aggregated or pseudonymous usage data, such as
-          page views, approximate location, device category, and referral
-          source. The specific provider, retention period, and legal basis
-          should be added here before launch.
+          CMtoIN uses <strong>Vercel Web Analytics</strong> to understand which
+          pages are useful, how visitors find the site, and whether technical
+          problems affect particular devices or regions. Vercel Web Analytics is
+          designed to provide aggregated measurement without using analytics
+          cookies. Reported information can include page views, referring
+          sources, approximate country, device category, browser, operating
+          system, and visit timing.
         </p>
         <p>
-          Where required, analytics should be configured to avoid collecting
-          unnecessary personal information and to respect consent choices.
+          CMtoIN does not send calculator inputs, conversion results, or email
+          content to Vercel Analytics. No custom analytics events are currently
+          configured. Vercel processes analytics data under its own privacy
+          terms; see{" "}
+          <a
+            href="https://vercel.com/docs/analytics"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Vercel&apos;s analytics documentation
+          </a>{" "}
+          and{" "}
+          <a
+            href="https://vercel.com/legal/privacy-policy"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Vercel&apos;s privacy policy
+          </a>
+          . Where consent is required for analytics, the deployment should be
+          configured to respect that requirement before data is collected.
         </p>
 
         <h2 id="advertising">6. Advertising</h2>
@@ -213,7 +237,8 @@ export default function PrivacyPolicyPage() {
         <h2 id="third-parties">7. Third-party services and links</h2>
         <p>
           The site may rely on third-party providers for hosting, content
-          delivery, security, analytics, or advertising. Those providers process
+          delivery, security, analytics, or advertising. Vercel provides the
+          Web Analytics service used by this site. Those providers process
           information under their own privacy policies. The site may also link
           to external websites; CMtoIN is not responsible for their content or
           privacy practices. Review the privacy policy of any third-party site
@@ -239,10 +264,10 @@ export default function PrivacyPolicyPage() {
           Information should be retained only for as long as needed for the
           purpose described in this policy or as required by law. Email
           correspondence may be kept for as long as necessary to handle the
-          request and maintain a record of corrections. Server logs and
-          analytics data, if collected, should follow the retention settings of
-          the relevant provider. This section should be updated once the final
-          providers are known.
+          request and maintain a record of corrections. Vercel Web Analytics
+          data is retained according to Vercel&apos;s applicable retention
+          settings. If the analytics provider changes, this section should be
+          updated to describe the new retention period.
         </p>
 
         <h2 id="rights">10. Your privacy rights</h2>

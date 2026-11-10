@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 import { AdSenseScript } from "@/components/AdSlot";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
@@ -87,6 +88,7 @@ export default function RootLayout({
         <div className="flex-1">{children}</div>
         <Footer />
         <AdSenseScript />
+        <Analytics />
       </body>
     </html>
   );

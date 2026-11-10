@@ -18,7 +18,7 @@ CMtoIN provides fast, accurate length converters, a complete centimeter-to-inch 
 - **TypeScript**
 - **Tailwind CSS 4**
 - **Lucide React** icons
-- No additional runtime dependencies
+- **Vercel Web Analytics** via `@vercel/analytics`
 
 ## Getting started
 
@@ -126,9 +126,20 @@ Every unit is defined by its exact relationship to the meter:
 - Semantic heading hierarchy and breadcrumbs
 - `WebSite`, `WebPage`, `BreadcrumbList`, and valid `FAQPage` JSON-LD
 - `app/sitemap.ts` and `app/robots.ts`
-- All content is server-rendered HTML; client JavaScript is limited to the header and calculators
+- All content is server-rendered HTML; client JavaScript is limited to the header, calculators, and lightweight Vercel Analytics
 
 Structured data describes visible page content only. It does not guarantee any particular search result treatment.
+
+## Analytics
+
+Vercel Web Analytics is mounted once in `app/layout.tsx` with the official
+`@vercel/analytics/next` component. It activates on Vercel deployments and
+provides cookieless, aggregated traffic reporting. No custom events are sent,
+and calculator inputs or results are never included in analytics data.
+
+The privacy policy describes the current Vercel Analytics setup. Review the
+provider configuration, consent requirements, and retention settings before
+publishing in a regulated region.
 
 ## Advertising
 
@@ -144,7 +155,7 @@ Google AdSense support is prepared but **disabled by default**. No publisher ID 
 
 ## Content and legal review
 
-The privacy policy, terms of use, and disclaimer are clearly marked templates. They require review by a qualified professional and must be adapted to the actual hosting, analytics, advertising, and jurisdiction before publication.
+The privacy policy, terms of use, and disclaimer are clearly marked templates. They require review by a qualified professional and must be adapted to the actual hosting, analytics (currently Vercel Web Analytics), advertising, and jurisdiction before publication.
 
 ## Verification
 
