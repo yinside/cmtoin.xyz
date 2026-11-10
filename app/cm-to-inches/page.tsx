@@ -118,7 +118,7 @@ export default function CmToInchesPage() {
 
       <AdSlot placement="converterBelowCalculator" className="my-12 sm:my-14" />
 
-      <section aria-labelledby="formula-heading">
+      <section className="mt-16 sm:mt-20" aria-labelledby="formula-heading">
         <div className="grid gap-10 lg:grid-cols-[0.85fr_1.15fr] lg:gap-16">
           <div>
             <SectionHeading
