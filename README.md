@@ -1,6 +1,6 @@
 # CMtoIN
 
-A production-ready measurement conversion website for **cmtoin.xyz**, built with Next.js App Router, TypeScript, Tailwind CSS, and React.
+A production-ready measurement conversion website for **www.cmtoin.xyz**, built with Next.js App Router, TypeScript, Tailwind CSS, and React.
 
 CMtoIN provides fast, accurate length converters, a complete centimeter-to-inch chart, and practical guides. The primary tools are:
 
@@ -168,4 +168,4 @@ The privacy policy, terms of use, and disclaimer are clearly marked templates. T
 
 ## Contact
 
-`contact@cmtoin.xyz`
+`huyinside@gmail.com`

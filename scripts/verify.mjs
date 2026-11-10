@@ -10,6 +10,7 @@
  */
 
 const BASE_URL = process.env.BASE_URL ?? "http://127.0.0.1:3000";
+const SITE_ORIGIN = "https://www.cmtoin.xyz";
 
 const pages = [
   ["/", "CM to IN – Unit Conversion Made Easy"],
@@ -43,7 +44,7 @@ const requiredText = {
   "/cm-to-inches/": ["1 in = 2.54 cm", "70.8661"],
   "/cm-to-feet-inches/": ["5 ft 10.87 in"],
   "/cm-to-inches-chart/": ["118.1102", "1–50 cm", "251–300 cm"],
-  "/contact/": ["contact@cmtoin.xyz"],
+  "/contact/": ["huyinside@gmail.com"],
   "/privacy-policy/": ["Template notice", "Google AdSense", "Cookies"],
   "/terms/": ["Template notice", "Governing law"],
   "/disclaimer/": ["informational", "precision is critical"],
@@ -183,7 +184,7 @@ for (const [path, expectedH1] of pages) {
   }
 
   const canonical = canonicalOf(html);
-  const expectedCanonical = `https://cmtoin.xyz${path}`;
+  const expectedCanonical = `${SITE_ORIGIN}${path}`;
   if (canonical !== expectedCanonical) {
     fail(`${path} canonical is ${canonical}, expected ${expectedCanonical}`);
   }
@@ -266,7 +267,7 @@ for (const value of ["/robots.txt", "/sitemap.xml", "/og-image.png"]) {
 }
 
 const robots = await (await fetch(`${BASE_URL}/robots.txt`)).text();
-if (!robots.includes("Sitemap: https://cmtoin.xyz/sitemap.xml")) {
+if (!robots.includes(`Sitemap: ${SITE_ORIGIN}/sitemap.xml`)) {
   fail("robots.txt does not reference the sitemap");
 }
 
@@ -280,7 +281,7 @@ if (sitemapUrls.length !== pages.length) {
   );
 }
 for (const [path] of pages) {
-  if (!sitemapUrls.includes(`https://cmtoin.xyz${path}`)) {
+  if (!sitemapUrls.includes(`${SITE_ORIGIN}${path}`)) {
     fail(`sitemap is missing ${path}`);
   }
 }

@@ -1,10 +1,10 @@
 export const SITE = {
   name: "CMtoIN",
-  url: "https://cmtoin.xyz",
+  url: "https://www.cmtoin.xyz",
   tagline: "Convert measurements instantly.",
   description:
     "Convert centimeters to inches, inches to centimeters, and other length units with fast, accurate calculators, conversion charts, and practical guides.",
-  email: "contact@cmtoin.xyz",
+  email: "huyinside@gmail.com",
   locale: "en_US",
   language: "en-US",
   copyrightYear: 2026,

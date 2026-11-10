@@ -72,7 +72,7 @@ export default function TermsPage() {
         <h2 id="acceptance">1. Acceptance of terms</h2>
         <p>
           By accessing or using CMtoIN at{" "}
-          <Link href="/">cmtoin.xyz</Link> (the &ldquo;site&rdquo;), you agree
+          <Link href="/">www.cmtoin.xyz</Link> (the &ldquo;site&rdquo;), you agree
           to these terms of use. If you do not agree, do not use the site.
         </p>
 

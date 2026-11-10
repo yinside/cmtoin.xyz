@@ -76,7 +76,7 @@ export default function PrivacyPolicyPage() {
         <p>
           CMtoIN (&ldquo;CMtoIN,&rdquo; &ldquo;we,&rdquo; &ldquo;us,&rdquo; or
           &ldquo;our&rdquo;) operates the website at{" "}
-          <Link href="/">cmtoin.xyz</Link>. This page explains the types of
+          <Link href="/">www.cmtoin.xyz</Link>. This page explains the types of
           information that may be processed when you visit the site, how that
           information may be used, and the choices available to you.
         </p>
