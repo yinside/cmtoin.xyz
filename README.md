@@ -77,6 +77,7 @@ app/
   meters-to-feet/            Meter converter
   guides/                    Guides index and three articles
   about/, contact/           Informational pages
+  sitemap/                   Human-readable site index
   privacy-policy/, terms/,
   disclaimer/                Legal templates
   sitemap.ts, robots.ts      SEO routes

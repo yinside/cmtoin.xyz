@@ -125,4 +125,5 @@ export const FOOTER_RESOURCE_LINKS = [
   { label: "Guides", href: "/guides/" },
   { label: "About", href: "/about/" },
   { label: "Contact", href: "/contact/" },
+  { label: "Sitemap", href: "/sitemap/" },
 ] as const;
