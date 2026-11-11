@@ -22,9 +22,6 @@ export const metadata: Metadata = {
   description: SITE.description,
   applicationName: SITE.name,
   manifest: "/manifest.webmanifest",
-  verification: {
-    google: "aGg9IWsXf7XEwVthQY3TQtgP0UncjHgmAK9_frTcqQw",
-  },
   alternates: {
     canonical: "/",
   },

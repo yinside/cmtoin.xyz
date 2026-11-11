@@ -11,8 +11,6 @@
 
 const BASE_URL = process.env.BASE_URL ?? "http://127.0.0.1:3000";
 const SITE_ORIGIN = "https://www.cmtoin.xyz";
-const GOOGLE_SITE_VERIFICATION =
-  "aGg9IWsXf7XEwVthQY3TQtgP0UncjHgmAK9_frTcqQw";
 
 const pages = [
   ["/", "CM to IN – Unit Conversion Made Easy"],
@@ -196,15 +194,6 @@ for (const [path, expectedH1] of pages) {
   if (!openGraphTitle) fail(`${path} has no og:title`);
   if (!openGraphImage?.includes("og-image.png")) {
     fail(`${path} has no og:image`);
-  }
-
-  const googleVerification = metaContent(
-    html,
-    "name",
-    "google-site-verification",
-  );
-  if (googleVerification !== GOOGLE_SITE_VERIFICATION) {
-    fail(`${path} is missing the Google site verification meta tag`);
   }
 
   const h1s = [...html.matchAll(/<h1[^>]*>([\s\S]*?)<\/h1>/gi)].map(
