@@ -87,6 +87,7 @@ components/
   Header.tsx                 Responsive navigation and converters menu
   Footer.tsx                 Site footer
   ConversionCalculator.tsx   Bidirectional cm/in/ft/mm/m calculator
+  ConversionRuler.tsx        Responsive cm/inch visual scale synced to the calculator
   HeightConverter.tsx        cm → feet + inches
   ConversionTable.tsx        Reusable accessible table
   ConversionCard.tsx         Popular converter cards
@@ -98,6 +99,7 @@ components/
 
 lib/
   conversions.ts             Unit definitions, exact conversion engine, formatting
+  ruler.ts                   Ruler ranges, zoom windows, and tick calculations
   number-input.ts            Shared positive-decimal parser
   site.ts                    Navigation and site constants
   metadata.ts                Canonical, Open Graph, and Twitter metadata helper

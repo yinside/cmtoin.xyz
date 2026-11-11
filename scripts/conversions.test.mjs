@@ -15,6 +15,12 @@ import {
 } from "../lib/conversions.ts";
 import { CHART_RANGES, getCmInchRows } from "../lib/chart-data.ts";
 import { parsePositiveNumber } from "../lib/number-input.ts";
+import {
+  chooseTickStep,
+  getAutoRange,
+  getMarkerFraction,
+  getRulerWindow,
+} from "../lib/ruler.ts";
 
 const closeTo = (actual, expected, tolerance = 1e-10) => {
   assert.ok(
@@ -192,4 +198,41 @@ test("preview chart values are accurate", () => {
   assert.equal(byCm.get(150), "59.0551");
   assert.equal(byCm.get(180), "70.8661");
   assert.equal(byCm.get(200), "78.7402");
+});
+
+test("ruler range adapts to the current length", () => {
+  assert.equal(getAutoRange(0), 10);
+  assert.equal(getAutoRange(0.5), 1);
+  assert.equal(getAutoRange(1), 2);
+  assert.equal(getAutoRange(5), 10);
+  assert.equal(getAutoRange(10), 20);
+  assert.equal(getAutoRange(180), 200);
+  assert.equal(getAutoRange(200), 250);
+});
+
+test("manual ruler zoom keeps the current length in view", () => {
+  const auto = getRulerWindow(180, "auto");
+  assert.deepEqual(auto, { start: 0, end: 200, width: 200 });
+
+  const zoomed = getRulerWindow(180, 10);
+  assert.equal(zoomed.start, 172.5);
+  assert.equal(zoomed.end, 182.5);
+  assert.equal(zoomed.width, 10);
+
+  const zero = getRulerWindow(0, 10);
+  assert.deepEqual(zero, { start: 0, end: 10, width: 10 });
+});
+
+test("ruler marker fraction is accurate and clamped", () => {
+  closeTo(getMarkerFraction(5, 0, 10), 0.5);
+  closeTo(getMarkerFraction(180, 0, 200), 0.9);
+  closeTo(getMarkerFraction(180, 172.5, 182.5), 0.75);
+  assert.equal(getMarkerFraction(-1, 0, 10), 0);
+  assert.equal(getMarkerFraction(11, 0, 10), 1);
+});
+
+test("ruler tick steps stay legible", () => {
+  assert.equal(chooseTickStep(92, 7, [0.05, 0.1, 0.2, 0.5]), 0.1);
+  assert.equal(chooseTickStep(46, 5.5, [0.1, 0.2, 0.5, 1]), 0.2);
+  assert.equal(chooseTickStep(0, 7, [0.1, 1, 10]), 10);
 });

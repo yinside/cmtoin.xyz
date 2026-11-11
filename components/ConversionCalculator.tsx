@@ -26,6 +26,7 @@ import {
   type LengthUnitId,
 } from "@/lib/conversions";
 import { parsePositiveNumber } from "@/lib/number-input";
+import { ConversionRuler } from "@/components/ConversionRuler";
 import { useCopyToClipboard } from "@/hooks/useCopyToClipboard";
 
 interface ConversionCalculatorProps {
@@ -91,6 +92,18 @@ export function ConversionCalculator({
     () => getPresets(pair.from, presets),
     [presets, pair.from],
   );
+
+  const isCmInPair =
+    (pair.from === "cm" && pair.to === "in") ||
+    (pair.from === "in" && pair.to === "cm");
+
+  const lengthCm = useMemo(() => {
+    if (parsed.value === null) {
+      return 0;
+    }
+    const value = convertLength(parsed.value, pair.from, "cm");
+    return Number.isFinite(value) ? value : 0;
+  }, [parsed.value, pair.from]);
 
   const copyText = useMemo(() => {
     if (converted === null || !Number.isFinite(converted)) {
@@ -355,6 +368,27 @@ export function ConversionCalculator({
                   : ""}
             </span>
           </div>
+
+          {isCmInPair ? (
+            <ConversionRuler
+              lengthCm={lengthCm}
+              valueLabel={
+                parsed.value !== null
+                  ? `${formatDecimal(parsed.value, 4)} ${fromUnit.symbol}`
+                  : null
+              }
+              resultLabel={
+                displayValue !== null
+                  ? `${displayValue} ${toUnit.symbol}`
+                  : null
+              }
+              active={
+                parsed.value !== null &&
+                displayValue !== null &&
+                !isOutOfRange
+              }
+            />
+          ) : null}
 
           <div className="mt-4 flex items-start gap-2.5 rounded-xl bg-slate-50 px-3.5 py-3">
             <Info
