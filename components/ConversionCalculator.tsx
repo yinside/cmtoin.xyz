@@ -164,6 +164,23 @@ export function ConversionCalculator({
     [resetCopyState],
   );
 
+  const handleRulerChange = useCallback(
+    (centimeters: number) => {
+      if (!Number.isFinite(centimeters) || centimeters < 0) {
+        return;
+      }
+
+      const nextValue = convertLength(centimeters, "cm", pair.from);
+      if (!Number.isFinite(nextValue)) {
+        return;
+      }
+
+      setRawValue(formatEditableNumber(nextValue, 4));
+      resetCopyState();
+    },
+    [pair.from, resetCopyState],
+  );
+
   const cardTitle =
     title ?? `${fromUnit.name} to ${toUnit.name} Converter`;
 
@@ -387,6 +404,7 @@ export function ConversionCalculator({
                 displayValue !== null &&
                 !isOutOfRange
               }
+              onValueChange={handleRulerChange}
             />
           ) : null}
 

@@ -16,12 +16,29 @@ interface ConversionRulerProps {
   valueLabel: string | null;
   resultLabel: string | null;
   active: boolean;
+  onValueChange: (centimeters: number) => void;
 }
 
 const RULER_HEIGHT = 160;
 const RULER_TOP = 80;
 const RULER_LEFT = 52;
 const RULER_RIGHT_PADDING = 12;
+
+const INDUSTRIAL = {
+  border: "#334155",
+  topBand: "#0F172A",
+  bottomBand: "#1E293B",
+  divider: "#334155",
+  cmLabel: "#FBBF24",
+  inLabel: "#CBD5E1",
+  tickMinor: "#64748B",
+  tickMajor: "#94A3B8",
+  tickLabel: "#E2E8F0",
+  cmText: "#F8FAFC",
+  inchText: "#E2E8F0",
+  marker: "#F97316",
+  markerFill: "#FFF7ED",
+} as const;
 
 const CM_TICK_STEPS = [
   0.01, 0.02, 0.05, 0.1, 0.2, 0.5, 1, 2, 5, 10, 20, 50, 100, 200, 500,
@@ -123,17 +140,26 @@ export function ConversionRuler({
   valueLabel,
   resultLabel,
   active,
+  onValueChange,
 }: ConversionRulerProps) {
   const [zoom, setZoom] = useState<RulerZoom>("auto");
   const [width, setWidth] = useState(0);
+  const [isSliding, setIsSliding] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
+  const frozenWindowRef = useRef<ReturnType<typeof getRulerWindow> | null>(
+    null,
+  );
   const rawId = useId();
   const baseId = `ruler-${rawId.replaceAll(":", "")}`;
   const titleId = `${baseId}-title`;
   const clipId = `${baseId}-clip`;
 
   const safeLength = Number.isFinite(lengthCm) ? lengthCm : 0;
-  const scaleWindow = getRulerWindow(safeLength, zoom);
+  const computedWindow = getRulerWindow(safeLength, zoom);
+  const scaleWindow =
+    isSliding && frozenWindowRef.current
+      ? frozenWindowRef.current
+      : computedWindow;
   const rangeLabel = `${formatDecimal(scaleWindow.start, 2)}–${formatDecimal(
     scaleWindow.end,
     2,
@@ -143,6 +169,19 @@ export function ConversionRuler({
     scaleWindow.start,
     scaleWindow.end,
   );
+
+  const clampedLength = Math.min(
+    scaleWindow.end,
+    Math.max(scaleWindow.start, safeLength),
+  );
+  const sliderStep =
+    scaleWindow.width <= 2
+      ? 0.01
+      : scaleWindow.width <= 20
+        ? 0.1
+        : scaleWindow.width <= 100
+          ? 0.5
+          : 1;
 
   const rulerWidth = Math.max(0, width - RULER_LEFT - RULER_RIGHT_PADDING);
   const pxPerCm = rulerWidth > 0 ? rulerWidth / scaleWindow.width : 0;
@@ -198,6 +237,16 @@ export function ConversionRuler({
     return () => observer.disconnect();
   }, []);
 
+  const beginSlide = () => {
+    frozenWindowRef.current = getRulerWindow(safeLength, zoom);
+    setIsSliding(true);
+  };
+
+  const endSlide = () => {
+    setIsSliding(false);
+    frozenWindowRef.current = null;
+  };
+
   const markerX =
     rulerWidth > 0
       ? RULER_LEFT + markerFraction * rulerWidth
@@ -225,38 +274,41 @@ export function ConversionRuler({
 
   return (
     <figure
-      className="mt-4 rounded-2xl border border-slate-200 bg-slate-50/70 p-3.5 sm:p-4"
+      className="mt-4 rounded-2xl border border-t-2 border-slate-700 border-t-amber-500/80 bg-slate-900 p-3.5 shadow-sm select-none sm:p-4"
       aria-labelledby={titleId}
     >
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <div className="flex items-center gap-1.5">
             <Ruler
-              className="h-3.5 w-3.5 text-brand-600"
+              className="h-3.5 w-3.5 text-amber-400"
               aria-hidden="true"
             />
             <p
               id={titleId}
-              className="text-[0.68rem] font-semibold uppercase tracking-[0.12em] text-brand-700"
+              className="text-[0.68rem] font-semibold uppercase tracking-[0.12em] text-amber-400"
             >
               Visual scale
             </p>
           </div>
-          <p className="mt-1 text-sm font-semibold text-navy">
+          <p className="mt-1 text-sm font-semibold text-slate-100">
             {active && valueLabel && resultLabel
               ? `${valueLabel} = ${resultLabel}`
               : "Enter a value to place it on the ruler"}
           </p>
+          <p className="mt-0.5 text-[0.65rem] leading-5 text-slate-400">
+            Drag the ruler or use arrow keys to set a value.
+          </p>
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
-          <span className="text-[0.65rem] font-medium uppercase tracking-[0.1em] text-slate-500">
+          <span className="text-[0.65rem] font-medium uppercase tracking-[0.1em] text-slate-400">
             Zoom
           </span>
           <div
             role="group"
             aria-label="Ruler zoom"
-            className="inline-flex rounded-lg border border-slate-200 bg-white p-0.5"
+            className="inline-flex rounded-lg border border-slate-700 bg-slate-950 p-0.5"
           >
             {RULER_ZOOMS.map((option) => {
               const selected = zoom === option;
@@ -273,10 +325,10 @@ export function ConversionRuler({
                       ? "Automatically fit the scale"
                       : `Show a ${option} centimeter window`
                   }
-                  className={`min-h-7 rounded-md px-2 py-1 text-[0.68rem] font-semibold transition-colors ${
+                  className={`min-h-7 rounded-md px-2 py-1 text-[0.68rem] font-semibold transition-colors focus-visible:outline-amber-400 ${
                     selected
-                      ? "bg-brand-600 text-white"
-                      : "text-slate-600 hover:bg-brand-50 hover:text-brand-700"
+                      ? "bg-amber-500 text-slate-950"
+                      : "text-slate-300 hover:bg-slate-800 hover:text-white"
                   }`}
                 >
                   {label}
@@ -289,7 +341,7 @@ export function ConversionRuler({
 
       <div
         ref={containerRef}
-        className="mt-3 h-[160px] overflow-hidden rounded-xl border border-slate-200 bg-white"
+        className="relative mt-3 h-[160px] overflow-hidden rounded-xl border border-slate-700 bg-slate-950 focus-within:ring-2 focus-within:ring-amber-400/80 focus-within:ring-offset-2 focus-within:ring-offset-slate-900"
       >
         {width > 0 ? (
           <svg
@@ -298,7 +350,7 @@ export function ConversionRuler({
             width={width}
             height={RULER_HEIGHT}
             viewBox={`0 0 ${width} ${RULER_HEIGHT}`}
-            className="block font-sans tabular-nums"
+            className="pointer-events-none block font-sans tabular-nums"
           >
             <defs>
               <clipPath id={clipId}>
@@ -318,14 +370,14 @@ export function ConversionRuler({
                 y="0"
                 width={width}
                 height={RULER_TOP}
-                fill="#EFF6FF"
+                fill={INDUSTRIAL.topBand}
               />
               <rect
                 x="0"
                 y={RULER_TOP}
                 width={width}
                 height={RULER_HEIGHT - RULER_TOP}
-                fill="#F8FAFC"
+                fill={INDUSTRIAL.bottomBand}
               />
 
               {active ? (
@@ -334,8 +386,8 @@ export function ConversionRuler({
                   y="0"
                   width={Math.max(0, markerX - RULER_LEFT)}
                   height={RULER_HEIGHT}
-                  fill="#2563EB"
-                  opacity="0.045"
+                  fill={INDUSTRIAL.marker}
+                  opacity="0.07"
                 />
               ) : null}
 
@@ -346,15 +398,15 @@ export function ConversionRuler({
                     y1="7"
                     x2={markerX}
                     y2={RULER_HEIGHT - 7}
-                    stroke="#2563EB"
-                    strokeWidth="1.75"
+                    stroke={INDUSTRIAL.marker}
+                    strokeWidth="2"
                   />
                   <circle
                     cx={markerX}
                     cy="8"
                     r="4.5"
-                    fill="#FFFFFF"
-                    stroke="#2563EB"
+                    fill={INDUSTRIAL.markerFill}
+                    stroke={INDUSTRIAL.marker}
                     strokeWidth="2"
                   />
                 </>
@@ -365,7 +417,7 @@ export function ConversionRuler({
                 y="47"
                 fontSize="13"
                 fontWeight="700"
-                fill="#1D4ED8"
+                fill={INDUSTRIAL.cmLabel}
                 letterSpacing="1"
               >
                 CM
@@ -382,7 +434,7 @@ export function ConversionRuler({
                       y1={RULER_TOP}
                       x2={x}
                       y2={RULER_TOP - height}
-                      stroke="#94A3B8"
+                      stroke={tick.isLabel ? INDUSTRIAL.tickLabel : tick.isMajor ? INDUSTRIAL.tickMajor : INDUSTRIAL.tickMinor}
                       strokeWidth="1"
                     />
                     {tick.isLabel ? (
@@ -392,7 +444,7 @@ export function ConversionRuler({
                         textAnchor={labelAnchor(x)}
                         fontSize="11"
                         fontWeight="600"
-                        fill="#0F172A"
+                        fill={INDUSTRIAL.cmText}
                       >
                         {formatTickLabel(tick.value, cmLabelStep, "cm")}
                       </text>
@@ -406,7 +458,7 @@ export function ConversionRuler({
                 y1={RULER_TOP}
                 x2={width}
                 y2={RULER_TOP}
-                stroke="#CBD5E1"
+                stroke={INDUSTRIAL.divider}
                 strokeWidth="1"
               />
 
@@ -415,7 +467,7 @@ export function ConversionRuler({
                 y="128"
                 fontSize="13"
                 fontWeight="700"
-                fill="#475569"
+                fill={INDUSTRIAL.inLabel}
                 letterSpacing="1"
               >
                 IN
@@ -432,7 +484,7 @@ export function ConversionRuler({
                       y1={RULER_TOP}
                       x2={x}
                       y2={RULER_TOP + height}
-                      stroke="#94A3B8"
+                      stroke={tick.isLabel ? INDUSTRIAL.tickLabel : tick.isMajor ? INDUSTRIAL.tickMajor : INDUSTRIAL.tickMinor}
                       strokeWidth="1"
                     />
                     {tick.isLabel ? (
@@ -442,7 +494,7 @@ export function ConversionRuler({
                         textAnchor={labelAnchor(x)}
                         fontSize="10.5"
                         fontWeight="600"
-                        fill="#475569"
+                        fill={INDUSTRIAL.inchText}
                       >
                         {formatTickLabel(
                           tick.value,
@@ -464,14 +516,34 @@ export function ConversionRuler({
               height={RULER_HEIGHT - 1}
               rx="11"
               fill="none"
-              stroke="#E2E8F0"
+              stroke={INDUSTRIAL.border}
             />
           </svg>
         ) : null}
+
+        <input
+          type="range"
+          min={scaleWindow.start}
+          max={scaleWindow.end}
+          step={sliderStep}
+          value={clampedLength}
+          onChange={(event) =>
+            onValueChange(Number(event.currentTarget.value))
+          }
+          onPointerDown={beginSlide}
+          onPointerUp={endSlide}
+          onPointerCancel={endSlide}
+          onLostPointerCapture={endSlide}
+          onBlur={endSlide}
+          aria-label="Set the length with the centimeter and inch ruler"
+          aria-valuetext={`${formatDecimal(clampedLength, 2)} centimeters, ${formatDecimal(clampedLength / 2.54, 2)} inches`}
+          className="absolute inset-y-0 left-[52px] right-[12px] z-10 h-full w-auto cursor-ew-resize touch-none appearance-none bg-transparent p-0 opacity-0 focus-visible:outline-none"
+          title="Drag to set a value"
+        />
       </div>
 
-      <figcaption className="mt-2 flex flex-wrap items-center justify-between gap-2 text-[0.65rem] leading-5 text-slate-500">
-        <span>Scale: {rangeLabel}</span>
+      <figcaption className="mt-2 flex flex-wrap items-center justify-between gap-2 text-[0.65rem] leading-5 text-slate-400">
+        <span>Drag to set · Scale: {rangeLabel}</span>
         <span>1 in = 2.54 cm</span>
       </figcaption>
       <span className="sr-only">
